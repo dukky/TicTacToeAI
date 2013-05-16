@@ -1,4 +1,4 @@
-package im.duk.TicTacToe;
+package im.duk.tictactoe;
 
 public class Board {
 	public static final int ROWS = 3;
@@ -65,13 +65,20 @@ public class Board {
 		for (int i = 0; i < ROWS; i++) {
 			for (int j = 0; j < COLS; j++) {
 				cells[i][j].paint();
-				System.out.print((j < COLS) ? "|" : "");
+				System.out.print((j < COLS - 1) ? "|" : "");
 			}
 			System.out.println();
 			if(i < ROWS - 1) {
 				System.out.println("-----------");
 			}
 		}
+	}
+	
+	public static void main(String[] args) {
+		Board board = new Board();
+		board.cells[1][1].setContent(Contents.CROSS);
+		board.cells[2][2].setContent(Contents.NOUGHT);
+		board.paint();
 	}
 
 }

@@ -1,4 +1,4 @@
-package im.duk.TicTacToe;
+package im.duk.tictactoe;
 
 
 public enum Contents {
