@@ -3,7 +3,8 @@ package im.duk.tictactoe;
 public class Board {
 	public static final int ROWS = 3;
 	public static final int COLS = 3;
-
+	public int row;
+	public int col;
 	public Cell[][] cells;
 
 	public Board() {
@@ -30,7 +31,7 @@ public class Board {
 		return true;
 	}
 
-	public boolean hasWon(Contents side, int row, int col) {
+	public boolean hasWon(Contents side) {
 		
 		// 3 in the row
 		if (cells[row][0].getContent() == side
