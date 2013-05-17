@@ -80,7 +80,6 @@ public class Board {
 		board.cells[2][2].setContent(Contents.NOUGHT);
 		board.cells[1][2].setContent(Contents.CROSS);
 		board.paint();
-		
 	}
 
 }
