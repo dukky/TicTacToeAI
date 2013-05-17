@@ -1,7 +1,5 @@
 package im.duk.tictactoe;
 
-import java.io.IOException;
-
 public class Board {
 	public static final int ROWS = 3;
 	public static final int COLS = 3;
@@ -76,7 +74,7 @@ public class Board {
 		}
 	}
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		Board board = new Board();
 		board.cells[1][1].setContent(Contents.CROSS);
 		board.cells[2][2].setContent(Contents.NOUGHT);
