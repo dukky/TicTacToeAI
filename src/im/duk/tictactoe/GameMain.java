@@ -1,5 +1,8 @@
 package im.duk.tictactoe;
 
+import im.duk.tictactoeai.AiPlayer;
+
+import java.awt.Point;
 import java.util.Scanner;
 
 public class GameMain {
@@ -7,7 +10,7 @@ public class GameMain {
 	private Board board;
 	private GameState currentState;
 	private Contents currentPlayer;
-
+	private AiPlayer bot;
 	private static Scanner in = new Scanner(System.in);
 
 	public GameMain() {
@@ -17,6 +20,20 @@ public class GameMain {
 	private void initGame() {
 		board = new Board();
 		currentPlayer = Contents.CROSS;
+		System.out.println("Play with bot? y/n");
+		boolean validInput = false;
+		while (!validInput) {
+			String res = in.nextLine();
+			if (res.equals("y")) {
+				validInput = true;
+				bot = new AiPlayer(Contents.NOUGHT);
+			} else if (res.equals("n")) {
+				validInput = true;
+				bot = new AiPlayer(Contents.EMPTY);
+			} else {
+				System.out.println("Invalid input, please enter only y or n.");
+			}
+		}
 		currentState = GameState.PLAYING;
 	}
 
@@ -31,27 +48,39 @@ public class GameMain {
 
 	public void playerMove(Contents side) {
 		boolean validInput = false;
-		while (!validInput) {
-			if (side == Contents.CROSS) {
-				System.out
-						.println("Player X enter your move col(1-3),row(1-3):");
-			} else {
-				System.out
-						.println("Player O enter your move col(1-3),row(1-3):");
+		if (bot.getSide() != side) {
+			while (!validInput) {
+				if (side == Contents.CROSS) {
+					System.out
+							.println("Player X enter your move col(1-3),row(1-3):");
+				} else {
+					System.out
+							.println("Player O enter your move col(1-3),row(1-3):");
+				}
+				String[] input = in.nextLine().split(",");
+				int row = Integer.valueOf(input[1]) - 1;
+				int col = Integer.valueOf(input[0]) - 1;
+				if (row >= 0 && row < Board.ROWS && col >= 0
+						&& col < Board.COLS
+						&& board.cells[row][col].getContent() == Contents.EMPTY) {
+					board.cells[row][col].setContent(side);
+					board.row = row;
+					board.col = col;
+					validInput = true;
+				} else {
+					System.out.println("Invalid move at " + (col + 1) + ", "
+							+ (row + 1) + ". Please try again.");
+				}
 			}
-			String[] input = in.nextLine().split(",");
-			int row = Integer.valueOf(input[1]) - 1;
-			int col = Integer.valueOf(input[0]) - 1;
-			if (row >= 0 && row < Board.ROWS && col >= 0 && col < Board.COLS
-					&& board.cells[row][col].getContent() == Contents.EMPTY) {
-				board.cells[row][col].setContent(side);
-				board.row = row;
-				board.col = col;
-				validInput = true;
-			} else {
-				System.out.println("Invalid move at " + (col + 1) + ", "
-						+ (row + 1) + ". Please try again.");
-			}
+		} else {
+			Point move = bot.makeMove(board);
+			int row = move.y - 1;
+			int col = move.x - 1;
+			System.out.println("Bot playing at " + (col+1) + "," + (row +1) + ".");
+			board.cells[row][col].setContent(Contents.NOUGHT);
+			board.row = row;
+			board.col = col;
+			
 		}
 	}
 
@@ -77,6 +106,7 @@ public class GameMain {
 			currentPlayer = (currentPlayer == Contents.CROSS) ? Contents.NOUGHT
 					: Contents.CROSS;
 		}
+		
 	}
 
 	/**
