@@ -12,6 +12,12 @@ public class Cell {
 		clear();
 	}
 	
+	public Cell(Cell c) {
+		this.content = c.content;
+		this.row = c.row;
+		this.col = c.col;
+	}
+	
 	public void clear() {
 		this.content = Contents.EMPTY;
 	}

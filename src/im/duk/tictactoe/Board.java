@@ -10,6 +10,17 @@ public class Board {
 	public Board() {
 		init();
 	}
+	
+	public Board(Board b) {
+		this.cells = new Cell[ROWS][COLS];
+		for(int i = 0; i < ROWS; ++i) {
+			for(int j = 0; j < COLS; ++j) {
+				cells[i][j] = new Cell(b.cells[i][j]);
+			}
+		}
+		this.row = b.row;
+		this.col = b.col;
+	}
 
 	private void init() {
 		cells = new Cell[ROWS][COLS];
