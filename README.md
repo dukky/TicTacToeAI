@@ -2,4 +2,4 @@ TicTacToeAI
 ===========
 A tic tac toe/noughts and crosses framework/AI written in Java.
 
-Bot currently only makes random moves and will probably be entirely rewritten before actual AI is implemented. Current system is based off a tutorial.
+Bot currently has minimal AI and will make random moves unless it can make a winning move. Current system is based off a tutorial.
