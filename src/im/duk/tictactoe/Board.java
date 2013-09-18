@@ -1,97 +1,114 @@
 package im.duk.tictactoe;
 
+/**
+ * @author Andreas Holley
+ * Class to represent the game board. Uses a bitboard representation.
+ *
+ */
+/**
+ * @author Andreas
+ * 
+ */
 public class Board {
-	public static final int ROWS = 3;
-	public static final int COLS = 3;
-	public int row;
-	public int col;
-	public Cell[][] cells;
+	public static final int ROW_0 = 0b111000000;
+	public static final int ROW_1 = 0b000111000;
+	public static final int ROW_2 = 0b000000111;
 
-	public Board() {
-		init();
-	}
+	public static final int COL_0 = 0b100100100;
+	public static final int COL_1 = 0b010010010;
+	public static final int COL_2 = 0b001001001;
 	
-	public Board(Board b) {
-		this.cells = new Cell[ROWS][COLS];
-		for(int i = 0; i < ROWS; ++i) {
-			for(int j = 0; j < COLS; ++j) {
-				cells[i][j] = new Cell(b.cells[i][j]);
-			}
-		}
-		this.row = b.row;
-		this.col = b.col;
+	public static final int DIAG_1 = 0b100010001;
+	public static final int DIAG_2 = 0b001010100;
+
+	public int noughts;
+	public int crosses;
+
+	/**
+	 * Default constructor for Board class. Creates a new empty board.
+	 */
+	public Board() {
+		this.noughts = 0b000000000;
+		this.crosses = 0b000000000;
 	}
 
-	private void init() {
-		cells = new Cell[ROWS][COLS];
-		for (int i = 0; i < ROWS; i++) {
-			for (int j = 0; j < COLS; j++) {
-				cells[i][j] = new Cell(i, j);
-			}
+	/**
+	 * Constructor to create a board with a non empty state.
+	 * 
+	 * @param noughts
+	 *            bitboard of noughts.
+	 * @param crosses
+	 *            bitboard of crosses.
+	 */
+	public Board(int noughts, int crosses) {
+		this.noughts = noughts;
+		this.crosses = crosses;
+		// this.empty = ~(noughts | crosses);
+	}
+
+	/**
+	 * Method to get the contents of a square on the board.
+	 * 
+	 * @param index
+	 *            the index to check, 0-8.
+	 * @return the contents of the square at the specified index.
+	 */
+	public Contents getAt(int index) {
+		int indexBoard = bitIndex(index);
+
+		if ((indexBoard & noughts) != 0) {
+			return Contents.NOUGHT;
+		} else if ((indexBoard & crosses) != 0) {
+			return Contents.CROSS;
+		} else {
+			return Contents.EMPTY;
 		}
 	}
 
-	public boolean isDraw() {
-		for (int i = 0; i < ROWS; i++) {
-			for (int j = 0; j < ROWS; j++) {
-				if (cells[i][j].getContent() == Contents.EMPTY) {
-					return false;
-				}
-			}
+	/**
+	 * Method to get the contents of a square on the board. This method should
+	 * be slightly slower than the other one due to performing additional
+	 * calculations.
+	 * 
+	 * @param x
+	 *            x index to check, 0-2.
+	 * @param y
+	 *            y index to check, 0-2.
+	 * @return the contents of the square at the specified index.
+	 */
+	public Contents getAt(int x, int y) {
+
+		int pos = x + (3*y);
+
+		if ((pos & noughts) != 0) {
+			return Contents.NOUGHT;
+		} else if ((pos & crosses) != 0) {
+			return Contents.CROSS;
+		} else {
+			return Contents.EMPTY;
 		}
-		return true;
 	}
 
-	public boolean hasWon(Contents side) {
-		
-		// 3 in the row
-		if (cells[row][0].getContent() == side
-				&& cells[row][1].getContent() == side
-				&& cells[row][2].getContent() == side) {
-			return true;
-		//3 in the column
-		} else if (cells[0][col].getContent() == side
-				&& cells[1][col].getContent() == side
-				&& cells[2][col].getContent() == side) {
-			return true;
-		// 3 in the diagonal
-		} else if (row == col) {
-			if (cells[0][0].getContent() == side
-					&& cells[1][1].getContent() == side
-					&& cells[2][2].getContent() == side) {
-				return true;
-			}
-		// 3 in the other diagonal
-		} else if (row + col == 2) {
-			if(cells[0][2].getContent() == side
-					&& cells[1][1].getContent() == side
-					&& cells[2][0].getContent() == side) {
-				return true;
-			}
+	/**
+	 * Creates a bitboard to check a specific position on the board.
+	 * @param index
+	 * @return
+	 */
+	private static int bitIndex(int index) {
+		int indexBoard = 0b100000000;
+		if (index >= 0 && index <= 9) {
+			indexBoard >>= index;
 		}
-
-		return false;
+		return indexBoard;
 	}
 	
 	public void paint() {
-		for (int i = 0; i < ROWS; i++) {
-			for (int j = 0; j < COLS; j++) {
-				cells[i][j].paint();
-				System.out.print((j < COLS - 1) ? "|" : "");
-			}
-			System.out.println();
-			if(i < ROWS - 1) {
-				System.out.println("-----------");
-			}
-		}
-	}
-	
-	public static void main(String[] args) {
-		Board board = new Board();
-		board.cells[1][1].setContent(Contents.CROSS);
-		board.cells[2][2].setContent(Contents.NOUGHT);
-		board.cells[1][2].setContent(Contents.CROSS);
-		board.paint();
+		
 	}
 
+	public static void main(String[] args) {
+		Board board = new Board(Board.DIAG_1, 0);
+		System.out.println(board.getAt(7));
+		System.out.println(board.getAt(0, 2));
+	}
 }
